@@ -1,61 +1,91 @@
-# Public Repository Search (Brief A)
+# Global Air Quality & Environmental Health Insights Explorer (Brief B)
 
-A responsive, accessible web application for searching public GitHub repositories in real-time against the live GitHub REST API (`https://api.github.com/search/repositories`). Designed with distinct **Loading**, **Error**, and **Empty (0 Results)** states that are fully demonstrable by a reviewer without editing any code.
-
----
-
-## 🌟 Key Architectural & State Features
-
-1. **Visually & Textually Distinct States**:
-   - **Loading State**: Displays an animated spinning loader, glowing skeleton cards, and live region text *"Searching public GitHub repositories for '[query]'..."*.
-   - **Empty State (0 Results - Search Succeeded)**: Explicitly presented as a **successful search result** (green status badge *"Search Succeeded"*, 🔍 search icon) rather than an error. Text states *"Your search for '[query]' completed successfully, but returned 0 public repositories"*.
-   - **Error State (Request Failed)**: Highlighted with a bold red container, warning icon ⚠️, and red glow. Explicitly details **What Failed** (*"GitHub API returned HTTP 422 / Network Error"*) and **What To Do** (*"Check your network connection, verify query syntax, or try again in a few moments"*). Includes a keyboard-operable **Retry Search** button.
-   - **Success State**: Displays a clean grid of interactive repository cards showing owner avatar, repository name, star count, fork count, primary language, description, and direct link to GitHub.
-
-2. **Full Accessibility & WCAG Compliance**:
-   - **Keyboard Operable**: End-to-end operable using `Tab`, `Shift+Tab`, `Space`, and `Enter`.
-   - **Visible Focus Rings**: Un-truncated focus indicators (`outline: 3px solid #6366f1`) on all search inputs, preset buttons, and links.
-   - **Live Region Announcements**: Screen readers (`aria-live="polite"` and `aria-live="assertive"`) are updated automatically whenever a state transition occurs.
+A responsive, WCAG-accessible web application built for **Final Project Brief B (A view onto a public dataset)**. It queries the live [Open-Meteo Air Quality Public API](https://open-meteo.com/en/docs/air-quality-api) to make complex atmospheric telemetry findable, comparable, and actionable across major metropolitan hubs.
 
 ---
 
-## 🔍 How Reviewers Can Test All 3 States Without Editing Code
+## 🌐 Live Application & Repository Links
 
-At the top of the page, a dedicated **Reviewer Controls Toolbar** provides instant one-click preset buttons and toggle controls:
-
-### 1. Test Success State (Results Found)
-- Click the preset button **`1. Search 'react' (Success State)`** or enter `react` / `python` into the search box and press Search.
-- **Expected Behavior**: Displays a grid of top GitHub repositories matching the keyword.
-
-### 2. Test Empty State (Search Succeeded with 0 Results)
-- Click the preset button **`2. Search 'qwertyuiopxyz9999' (Empty State)`** or search any random string with no matches.
-- **Expected Behavior**: Shows a green badge *"Search Succeeded"*, confirming the request succeeded, and informs the user that 0 repositories matched the query.
-
-### 3. Test Error State (Request Failed)
-- Click the preset button **`3. Simulate API Error (Error State)`** OR turn ON the **`Simulate Request Failure on Next Search`** toggle switch and press Search.
-- **Expected Behavior**: Displays a red alert card stating **What Failed** and **What To Do**, complete with an interactive **Retry Search Request** button.
-
-### 4. Test Loading State
-- Click the preset button **`4. Demo Loading State`** or execute any search over a slow connection.
-- **Expected Behavior**: Shows the translucent loading card with animated spinner and skeleton placeholder cards.
+- 🌐 **Deployed Live URL:** [https://devconnect-task1.surge.sh](https://devconnect-task1.surge.sh)
+- 📂 **GitHub Repository:** [https://github.com/thatikondaeaswarachary/DevConnect](https://github.com/thatikondaeaswarachary/DevConnect)
 
 ---
 
-## 🔍 Reviewer Verification Checklist
+## ❓ Questions This Interface Allows Someone To Answer
 
-- [x] **Loading, error, and empty are visually and textually distinct**: Each state uses unique color schemes, icons, titles, and layout containers.
-- [x] **All three reachable without code changes**: Accessible directly via the Reviewer Toolbar buttons at the top of the interface.
-- [x] **Error message says what failed and what to do**: Dedicated error box broken into "What Failed" and "What To Do" with a Retry action button.
-- [x] **Search with no results is presented as a result, not as an error**: Displayed with a green "Search Succeeded" badge confirming 0 matches found.
+Rather than presenting raw, uncontextualized JSON arrays, the interface directly answers core environmental health questions:
+
+1. **What is the current health risk level for a metropolitan area?**
+   - Renders a color-coded US EPA Air Quality Index (AQI) score with clear safety categories (**Good** 🟢, **Moderate** 🟡, **Unhealthy for Sensitive Groups** 🟠, **Unhealthy** 🔴, **Hazardous** 🟣).
+2. **What action should sensitive or general populations take right now?**
+   - Provides immediate, actionable health recommendations (e.g. outdoor physical activity limits, window ventilation advice).
+3. **Which specific pollutant is the primary driver impairing air quality?**
+   - Renders an interactive concentration breakdown ($\mu g/m^3$) across fine particulates ($\text{PM}_{2.5}$), coarse particulates ($\text{PM}_{10}$), nitrogen dioxide ($\text{NO}_2$), ground-level ozone ($\text{O}_3$), and sulphur dioxide ($\text{SO}_2$).
 
 ---
 
-## 💻 Local Execution
+## ⚠️ Explicit Dataset Scope & Limitations (Brief B Requirement)
 
-To run the application locally:
+> **Important Note on Data Boundaries:** Overstating what a dataset establishes is a primary pitfall. Below is the explicit scope of what this dataset establishes and does not establish.
 
-```bash
-python -m http.server 8000
-```
+### ✅ What This Dataset DOES Establish
+- **Current Ambient Air Quality Index (AQI)** calculated using standardized US EPA and European Air Quality Index formulas.
+- **Near-Real-Time Atmospheric Concentrations** of key criteria pollutants ($\text{PM}_{2.5}$, $\text{PM}_{10}$, $\text{NO}_2$, $\text{O}_3$, $\text{SO}_2$, $\text{CO}$).
+- **Short-Term Environmental Exposure Guidance** for sensitive demographics (asthmatics, children, elderly).
+- **Cross-City Comparative Benchmarks** across global metros (e.g. Tokyo vs. New Delhi vs. London).
 
-Open `http://localhost:8000` in your browser.
+### ❌ What This Dataset DOES NOT Establish
+- **Long-Term Decadal Climate Change Trends**: The API provides short-term operational telemetry, not multi-decade climate baselines.
+- **Indoor Air Quality or Home Ventilation Safety**: Telemetry measures outdoor ambient grid atmospheric air, not indoor air spaces.
+- **Block-Level Hyperlocal Micro-Variations**: Open-Meteo uses $11\text{km}$ grid cell interpolation; local micro-climates near specific roads may vary.
+- **Medical Diagnostic or Epidemiological Causality**: AQI values represent environmental risk metrics, not direct individual medical diagnoses.
+
+---
+
+## ⏳ Handling Slow & Failing Data Sources
+
+To ensure resilience when interacting with third-party public APIs, the application gracefully handles non-200 HTTP statuses, network timeouts, and slow connection speeds.
+
+### How a Reviewer Can Test Source Resilience Without Code Changes:
+At the top of the interface, the **Reviewer Source Resilience Toolbar** provides direct one-click testing buttons:
+
+1. **Test Normal Source Data (Tokyo)**:
+   - Click **`🌸 Tokyo (Good AQI)`** to fetch live telemetry for a low-pollution city.
+2. **Test High Pollution Data (New Delhi)**:
+   - Click **`🏙️ New Delhi (High Pollution)`** to fetch live telemetry for a high-AQI city.
+3. **Test Slow Network Source (Loading State)**:
+   - Click **`⏳ Simulate Slow Network Source`**.
+   - **Behavior**: Renders an animated loading spinner and text status *"Fetching Air Quality Telemetry..."* for 3 seconds before resolving.
+4. **Test Source API Failure (Error State)**:
+   - Click **`⚠️ Simulate Source API Failure`**.
+   - **Behavior**: Displays a bold red error panel detailing **What Failed** (*"Simulated Source Failure: Open-Meteo Public API timeout (HTTP 503)"*) and **What To Do**, complete with an interactive **🔄 Retry Source Connection** button.
+
+---
+
+## 💻 How a Stranger Can Run It Locally
+
+No build steps, node_modules, or complex compilers are required.
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/thatikondaeaswarachary/DevConnect.git
+   cd DevConnect
+   ```
+
+2. **Serve locally using Python's built-in HTTP server:**
+   ```bash
+   python -m http.server 8000
+   ```
+
+3. **Open in browser:**
+   Navigate to `http://localhost:8000`.
+
+---
+
+## 🔍 Reviewer Checklist
+
+- [x] **Repository with a history reflecting how it was built**: Clean git commit history on branch `main`.
+- [x] **README lets a stranger run it locally**: Clear Python command provided above.
+- [x] **Slow and failing responses from the source are handled**: Dedicated loading spinner, error alert box, and reviewer simulation buttons.
+- [x] **Deployed URL or short recording**: Deployed live at [https://devconnect-task1.surge.sh](https://devconnect-task1.surge.sh).
+- [x] **README states the limits of what the data supports**: Clear "DOES Establish" vs "DOES NOT Establish" section included.
