@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Compare subscription plans across 15 key features. Fully accessible, keyboard-operable, and optimized for mobile screens down to 320px.">
-  <title>Plan Comparison - Find the Right Fit</title>
+  <meta name="description" content="Public Repository Search web application demonstrating loading, error, and empty result states against the GitHub API.">
+  <title>Public Repository Search - GitHub API Explorer</title>
   
-  <!-- Modern Google Fonts -->
+  <!-- Modern Typography from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,310 +21,104 @@
   <!-- Header Section -->
   <header class="app-header">
     <div class="container">
-      <div class="brand-badge">DevConnect Pricing</div>
-      <h1 id="page-title">Compare Subscription Plans</h1>
-      <p class="subtitle">Flexible options designed to scale with your team from startup to enterprise.</p>
+      <span class="badge">Brief A • Public Repository Search</span>
+      <h1 id="page-title">GitHub Repository Search</h1>
+      <p class="subtitle">Search public repositories in real-time with full support for loading, error, and empty result states.</p>
     </div>
   </header>
 
   <!-- Main Content Area -->
   <main id="main-content" tabindex="-1">
     <div class="container">
-      
-      <!-- Toolbar & Accessibility Controls -->
-      <section class="toolbar" aria-label="Table View Controls">
-        <div class="toolbar-left">
-          <h2 class="sr-only">Interactive Controls</h2>
-          <!-- Highlight Differences Toggle Switch -->
+
+      <!-- Reviewer Quick Testing Toolbar -->
+      <section class="reviewer-toolbar" aria-label="Reviewer Demo Controls">
+        <div class="reviewer-toolbar-header">
+          <span class="reviewer-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Reviewer Controls (Test All 3 States Without Editing Code)
+          </span>
+        </div>
+        
+        <div class="reviewer-preset-buttons" role="group" aria-label="Preset demonstration buttons">
+          <button type="button" class="preset-btn" id="btn-demo-success" title="Execute a search for popular 'react' repositories">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            1. Search 'react' (Success State)
+          </button>
+          
+          <button type="button" class="preset-btn btn-empty" id="btn-demo-empty" title="Execute a search that returns 0 results">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            2. Search 'qwertyuiopxyz9999' (Empty State)
+          </button>
+
+          <button type="button" class="preset-btn btn-error" id="btn-demo-error" title="Trigger a simulated API network error">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            3. Simulate API Error (Error State)
+          </button>
+
+          <button type="button" class="preset-btn" id="btn-demo-loading" title="Show simulated persistent loading state">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+            4. Demo Loading State
+          </button>
+        </div>
+
+        <div class="error-toggle-wrapper">
           <button 
             type="button" 
             role="switch" 
             aria-checked="false" 
-            id="highlight-toggle" 
-            class="switch-control" 
-            aria-describedby="toggle-hint"
+            id="simulate-error-switch" 
+            class="error-toggle-switch"
+            aria-label="Toggle forced error simulation"
           >
-            <span class="switch-label">Highlight differences only</span>
-            <span class="switch-track" aria-hidden="true">
-              <span class="switch-thumb"></span>
-            </span>
+            <span class="error-toggle-thumb"></span>
           </button>
-          <span id="toggle-hint" class="toggle-hint-text">Emphasizes features that differ across plans</span>
+          <label for="simulate-error-switch" style="cursor: pointer;">Simulate Request Failure on Next Search</label>
         </div>
+      </section>
 
-        <div class="toolbar-right">
-          <!-- Mobile Plan Filter Tabs (Visible on small screens <= 640px) -->
-          <div class="mobile-filter-group" role="group" aria-label="Filter plan columns on mobile screens">
-            <span class="filter-label" id="mobile-filter-label">View plan:</span>
-            <div class="tab-list" role="tablist" aria-labelledby="mobile-filter-label">
-              <button role="tab" aria-selected="true" id="tab-all" aria-controls="comparison-table" class="plan-tab active">All Plans</button>
-              <button role="tab" aria-selected="false" id="tab-starter" aria-controls="comparison-table" class="plan-tab">Starter</button>
-              <button role="tab" aria-selected="false" id="tab-pro" aria-controls="comparison-table" class="plan-tab">Pro</button>
-              <button role="tab" aria-selected="false" id="tab-enterprise" aria-controls="comparison-table" class="plan-tab">Enterprise</button>
-            </div>
+      <!-- Primary Search Form -->
+      <section class="search-section" aria-label="Repository Search Form">
+        <form id="search-form" class="search-form" role="search">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              id="search-input" 
+              class="search-input" 
+              placeholder="Search public GitHub repositories (e.g. react, vue, python)..." 
+              value="react"
+              required 
+              aria-label="Repository search query"
+            >
           </div>
-        </div>
+          <button type="submit" id="search-submit-btn" class="search-button">
+            <span>Search</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </form>
       </section>
 
       <!-- Live Region for Screen Reader Announcements -->
       <div id="aria-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-      <!-- Feature Comparison Table Container -->
-      <div class="table-wrapper">
-        <table role="table" class="comparison-table" id="comparison-table" aria-labelledby="page-title">
-          <caption class="sr-only">
-            Detailed comparison of 15 features across Starter ($0), Pro ($29/month), and Enterprise ($99/month) plans.
-          </caption>
-
-          <!-- Table Header: Plan Overview -->
-          <thead>
-            <tr role="row" class="header-row">
-              <th scope="col" role="columnheader" class="col-feature-header">
-                <span class="feature-title">Features & Capabilities</span>
-                <span class="feature-count">15 total features</span>
-              </th>
-              
-              <!-- Plan 1: Starter -->
-              <th scope="col" role="columnheader" class="col-plan plan-starter-header">
-                <div class="plan-card-header">
-                  <span class="plan-name">Starter</span>
-                  <div class="plan-price">
-                    <span class="currency">$</span><span class="amount">0</span><span class="period">/mo</span>
-                  </div>
-                  <p class="plan-desc">For individuals and hobby projects building side ideas.</p>
-                  <button type="button" class="cta-button secondary" aria-label="Select Starter Plan ($0 per month)">Get Started</button>
-                </div>
-              </th>
-
-              <!-- Plan 2: Pro (Featured) -->
-              <th scope="col" role="columnheader" class="col-plan plan-pro-header featured">
-                <div class="featured-badge" aria-hidden="true">Most Popular</div>
-                <div class="plan-card-header">
-                  <span class="plan-name">Pro</span>
-                  <div class="plan-price">
-                    <span class="currency">$</span><span class="amount">29</span><span class="period">/mo</span>
-                  </div>
-                  <p class="plan-desc">For growing teams requiring enhanced power and limits.</p>
-                  <button type="button" class="cta-button primary" aria-label="Select Pro Plan ($29 per month)">Start 14-Day Trial</button>
-                </div>
-              </th>
-
-              <!-- Plan 3: Enterprise -->
-              <th scope="col" role="columnheader" class="col-plan plan-enterprise-header">
-                <div class="plan-card-header">
-                  <span class="plan-name">Enterprise</span>
-                  <div class="plan-price">
-                    <span class="currency">$</span><span class="amount">99</span><span class="period">/mo</span>
-                  </div>
-                  <p class="plan-desc">For organizations needing maximum scale, SLA, and security.</p>
-                  <button type="button" class="cta-button secondary" aria-label="Select Enterprise Plan ($99 per month)">Contact Sales</button>
-                </div>
-              </th>
-            </tr>
-          </thead>
-
-          <!-- Table Body: Categorized Features -->
-          <tbody>
-            
-            <!-- Category 1: Core Capabilities -->
-            <tr role="row" class="category-row">
-              <th colspan="4" scope="colgroup" role="columnheader" class="category-title">
-                <span class="category-icon" aria-hidden="true">🚀</span> Core Capabilities
-              </th>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Team Members</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">1 user</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">Up to 5 users</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Unlimited users</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Cloud Storage</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">5 GB</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">100 GB</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">2 TB</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Active Projects</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">3 active projects</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">25 active projects</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Unlimited projects</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="false">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Web & Mobile Access</span>
-                <span class="same-badge" aria-label="Value is identical across plans">Identical</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Included</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">Included</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Included</td>
-            </tr>
-
-            <!-- Category 2: Collaboration & Data -->
-            <tr role="row" class="category-row">
-              <th colspan="4" scope="colgroup" role="columnheader" class="category-title">
-                <span class="category-icon" aria-hidden="true">⚡</span> Collaboration & Data
-              </th>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Real-Time Editing</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Basic commenting</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">Full real-time co-authoring</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Real-time + Custom Workspaces</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Export Formats</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">CSV format</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">CSV & PDF formats</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">All formats + Automated Exports</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Version History</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">7 Days</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">90 Days</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Unlimited retention</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Automated Backups</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Daily snapshot</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">Hourly snapshot</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Real-time continuous backup</td>
-            </tr>
-
-            <!-- Category 3: Security & Governance -->
-            <tr role="row" class="category-row">
-              <th colspan="4" scope="colgroup" role="columnheader" class="category-title">
-                <span class="category-icon" aria-hidden="true">🛡️</span> Security & Governance
-              </th>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="false">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Data Encryption</span>
-                <span class="same-badge" aria-label="Value is identical across plans">Identical</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">256-bit AES at rest</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">256-bit AES at rest</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">256-bit AES + CMEK support</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Single Sign-On (SSO)</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Not included</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">Google & GitHub OAuth</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">SAML 2.0 / Okta / Azure AD</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Custom Roles & Permissions</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Standard Owner/Member</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">3 Pre-set Team Roles</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Fully Granular Custom Roles</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Audit Logs & Compliance</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Basic activity log</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">30-day exportable logs</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Unlimited logs + SOC2 Type II</td>
-            </tr>
-
-            <!-- Category 4: Support & Integration -->
-            <tr role="row" class="category-row">
-              <th colspan="4" scope="colgroup" role="columnheader" class="category-title">
-                <span class="category-icon" aria-hidden="true">💬</span> Support & Integrations
-              </th>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Customer Support</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Community forum</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">Priority Email & Chat</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">24/7 Dedicated Account Manager</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">Uptime SLA</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">99.5% target</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">99.9% target</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">99.99% financially backed SLA</td>
-            </tr>
-
-            <tr role="row" class="feature-row" data-different="true">
-              <th scope="row" role="rowheader" class="feature-cell">
-                <span class="feature-name">API & Webhook Access</span>
-                <span class="diff-badge" aria-label="Value differs across plans">Differs</span>
-              </th>
-              <td role="cell" data-plan-name="Starter" class="value-cell plan-starter">Read-only API</td>
-              <td role="cell" data-plan-name="Pro" class="value-cell plan-pro">Full API + 10 Webhooks</td>
-              <td role="cell" data-plan-name="Enterprise" class="value-cell plan-enterprise">Unlimited API + Custom Webhooks</td>
-            </tr>
-
-          </tbody>
-
-          <!-- Table Footer: Bottom Action Row -->
-          <tfoot>
-            <tr role="row" class="footer-row">
-              <th scope="row" role="rowheader" class="footer-label">Ready to upgrade?</th>
-              <td role="cell" class="plan-starter"><button type="button" class="cta-button secondary micro" aria-label="Select Starter Plan">Select Starter</button></td>
-              <td role="cell" class="plan-pro"><button type="button" class="cta-button primary micro" aria-label="Select Pro Plan">Select Pro</button></td>
-              <td role="cell" class="plan-enterprise"><button type="button" class="cta-button secondary micro" aria-label="Select Enterprise Plan">Select Enterprise</button></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      <!-- State & Results Container -->
+      <section id="results-section" aria-label="Search Results and Application States">
+        <div id="state-container" class="state-container">
+          <!-- Dynamic Content rendered by app.js (Initial, Loading, Empty, Error, Results) -->
+        </div>
+      </section>
 
     </div>
   </main>
 
-  <!-- Accessible Footer -->
-  <footer class="app-footer">
+  <!-- Footer -->
+  <footer>
     <div class="container">
-      <p>&copy; 2026 DevConnect Inc. All rights reserved. Designed for WCAG 2.1 AA accessibility compliance.</p>
+      <p>Built for Task 2 • GitHub Public Repository Search API Integration</p>
     </div>
   </footer>
 
